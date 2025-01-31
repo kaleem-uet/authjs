@@ -44,7 +44,7 @@ export default function LoginPage() {
             router.push('/my-account')
         }
     }
-
+    const email = form.getValues("email")
     return (
         <main className="flex items-center justify-center min-h-screen">
             <Card className="w-[365px]">
@@ -102,7 +102,8 @@ export default function LoginPage() {
                             </div>
 
                             <div className="text-muted-foreground text-sm">
-                                Forgot Password <Link href="/password-reset" className="underline">
+                                Forgot Password?{" "}
+                                <Link href={`/password-reset${email ? `?email=${encodeURIComponent(email)}` : ''}`} className="underline">
                                     Reset my Password
                                 </Link>
                             </div>

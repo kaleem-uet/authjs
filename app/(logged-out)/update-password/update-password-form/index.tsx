@@ -6,12 +6,11 @@ import { passwordSchema } from "@/validation/passwordSchema";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePassword } from "./action";
-import { toast } from "sonner";
+import { CardFooter } from "@/components/ui/card";
+import Link from "next/link";
 
 const formSchema = z
     .object({
-        currentPassword: passwordSchema,
         newPassword: passwordSchema,
         confirmPassword: z.string(),
     })
@@ -22,11 +21,10 @@ const formSchema = z
 
 type NewPasswordFormSchema = z.infer<typeof formSchema>;
 
-export default function ChangePasswordForm() {
+export default function UpdatePasswordForm() {
     const form = useForm<NewPasswordFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            currentPassword: "",
             newPassword: "",
             confirmPassword: "",
         },
@@ -34,21 +32,8 @@ export default function ChangePasswordForm() {
 
     async function onSubmit(values: NewPasswordFormSchema) {
         try {
-            const res = await changePassword({
-                currentPassword: values.currentPassword,
-                newPassword: values.newPassword,
-                confirmPassword: values.confirmPassword,
-            });
-            if (res?.error) {
-                form.setError("root", { message: res.message });
-            } else {
-                // Handle success case, e.g., show a success message
-                toast.success(res.message, {
-                    description: "Your password has been changed successfully!",
-                    className: "bg-green-500 text-white border border-green-700 shadow-lg", // Custom styles
-                });
+            console.log(values);
 
-            }
         } catch (error) {
             console.error("Error changing password:", error);
             form.setError("root", { message: "Failed to change password. Please try again." });
@@ -59,19 +44,7 @@ export default function ChangePasswordForm() {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <fieldset disabled={form.formState.isSubmitting} className="space-y-8">
-                    <FormField
-                        control={form.control}
-                        name="currentPassword"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Current Password</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter your current password" {...field} type="password" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
                     <FormField
                         control={form.control}
                         name="newPassword"
@@ -106,6 +79,15 @@ export default function ChangePasswordForm() {
                     <Button type="submit" className="w-full">
                         Submit
                     </Button>
+                    <CardFooter className="flex-col gap-2">
+                        <div className="text-muted-foreground text-sm">
+                            <Link href="/login" className="underline">
+                                Login to your account
+                            </Link>
+                        </div>
+
+
+                    </CardFooter>
                 </fieldset>
             </form>
         </Form>
