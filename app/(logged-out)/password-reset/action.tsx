@@ -6,7 +6,8 @@ import { passwordResetToken } from "@/db/passwordResetTokenSchema"
 import { users } from "@/db/userSchema"
 import { randomBytes } from "crypto"
 import { eq } from "drizzle-orm"
-
+import { Resend } from "resend";
+const resend = new Resend(process.env.AUTH_RESEND_KEY);
 export const passwordReset = async (emailAddress: string) => {
     const session = await auth()
     if (!!session?.user?.id) {
@@ -38,6 +39,14 @@ export const passwordReset = async (emailAddress: string) => {
             tokenExpiry
         }
     })
-    console.log("this is user", user[0]?.id);
+    // Send reset token via email
+    await resend.emails.send({
+        from: "no-reply@yourdomain.com",
+        to: emailAddress,
+        subject: "Password Reset Request",
+        html: `<p>Click <a href="https://localhost:3000/update-password?token=${resetToken}">here</a> to reset your password.</p>`,
+    });
+
+    console.log("Password reset token sent to", emailAddress);
 
 }

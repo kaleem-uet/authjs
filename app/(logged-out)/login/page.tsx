@@ -11,6 +11,7 @@ import { z } from "zod"
 import { loginWithCredential } from "./action"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { toast } from "sonner"
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -42,6 +43,10 @@ export default function LoginPage() {
         } else {
 
             router.push('/my-account')
+            toast.success(response?.message, {
+                description: "Login Successfully!",
+                className: "bg-green-500 text-white border border-green-700 shadow-lg", // Custom styles
+            });
         }
     }
     const email = form.getValues("email")

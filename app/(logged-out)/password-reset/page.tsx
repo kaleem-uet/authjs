@@ -33,55 +33,72 @@ export default function Page() { // Capitalized component name
 
     return (
         <main className="flex items-center justify-center min-h-screen">
-            <Card className="w-[365px]">
-                <CardHeader>
-                    <CardTitle>Password Reset</CardTitle>
-                    <CardDescription>Enter your Email address to reset password</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <fieldset disabled={form.formState.isSubmitting} className="space-y-8">
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Email</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Email" {...field} type="email" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                {form.formState.errors?.root?.message && ( // Prevent potential undefined error
-                                    <FormMessage>
-                                        {form.formState.errors.root.message}
-                                    </FormMessage>
-                                )}
-                                <Button type="submit" className="w-full">
-                                    Submit
-                                </Button>
-                            </fieldset>
-                        </form>
-                        <CardFooter className="flex-col gap-2 mt-2">
-                            <div className="text-muted-foreground text-sm">
-                                Don&apos;t have an account?{" "}
-                                <Link href="/login" className="underline">
-                                    Login
-                                </Link>
-                            </div>
-                            <div className="text-muted-foreground text-sm">
-                                Forgot Password?{" "}
-                                <Link href="/register" className="underline">
-                                    Register
-                                </Link>
-                            </div>
-                        </CardFooter>
-                    </Form>
-                </CardContent>
-            </Card>
+            {
+                form.formState.isSubmitSuccessful ? (
+                    <Card className="w-[365px]">
+                        <CardHeader>
+                            <CardTitle>Password Reset</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-center text-sm text-muted-foreground">
+                                Password reset link has been sent to your email. Please check your inbox.
+                            </p>
+                        </CardContent>
+                    </Card>
+                ) :
+                    (
+                        <Card className="w-[365px]">
+                            <CardHeader>
+                                <CardTitle>Password Reset</CardTitle>
+                                <CardDescription>Enter your Email address to reset password</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                                        <fieldset disabled={form.formState.isSubmitting} className="space-y-8">
+                                            <FormField
+                                                control={form.control}
+                                                name="email"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Email</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Email" {...field} type="email" />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            {form.formState.errors?.root?.message && ( // Prevent potential undefined error
+                                                <FormMessage>
+                                                    {form.formState.errors.root.message}
+                                                </FormMessage>
+                                            )}
+                                            <Button type="submit" className="w-full">
+                                                Submit
+                                            </Button>
+                                        </fieldset>
+                                    </form>
+                                    <CardFooter className="flex-col gap-2 mt-2">
+                                        <div className="text-muted-foreground text-sm">
+                                            Don&apos;t have an account?{" "}
+                                            <Link href="/login" className="underline">
+                                                Login
+                                            </Link>
+                                        </div>
+                                        <div className="text-muted-foreground text-sm">
+                                            Forgot Password?{" "}
+                                            <Link href="/register" className="underline">
+                                                Register
+                                            </Link>
+                                        </div>
+                                    </CardFooter>
+                                </Form>
+                            </CardContent>
+                        </Card>
+                    )
+            }
+
         </main>
     )
 }
